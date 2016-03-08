@@ -1,0 +1,100 @@
+module matrix_io (
+    input clk,
+    input reset,
+   //output
+    output reg[511:0] out_matrix,
+    output reg done,
+    //input
+    input start,
+    input[1023:0] in_matrix
+);
+
+
+
+
+reg t_start;
+reg[511:0] matrixA;
+reg[511:0] matrixB;
+wire[511:0] result;
+
+
+always @ (*) begin
+    matrixA[511:0] <= in_matrix[511:0];
+    matrixB[31:0] = in_matrix[543:512];
+    matrixB[63:32] = in_matrix[671:640];
+    matrixB[95:64] = in_matrix[799:768];
+    matrixB[127:96] = in_matrix[927:896];
+    matrixB[159:128] = in_matrix[575:544];
+    matrixB[191:160] = in_matrix[703:672];
+    matrixB[223:192] = in_matrix[831:800];
+    matrixB[255:224] = in_matrix[959:928];
+    matrixB[287:256] = in_matrix[607:576];
+    matrixB[319:288] = in_matrix[735:704];
+    matrixB[351:320] = in_matrix[863:832];
+    matrixB[383:352] = in_matrix[991:960];
+    matrixB[415:384] = in_matrix[639:608];
+    matrixB[447:416] = in_matrix[767:736];
+    matrixB[479:448] = in_matrix[895:864];
+    matrixB[511:480] = in_matrix[1023:992];
+end
+
+always @ (*) begin
+   out_matrix <= result;
+end
+
+
+localparam[2:0]
+    FSM_PRE = 2'd0,
+    FSM_CAL = 2'd1,
+    FSM_WAIT = 2'd2,
+    FSM_DONE = 2'd3;
+
+reg [2:0] fsm_cs, fsm_ns; 
+wire t_done[0:24];
+
+
+
+
+
+//reset
+always @ (posedge clk) begin
+      if(!reset) fsm_cs <= FSM_PRE;
+      else         fsm_cs <= fsm_ns; 
+   end
+
+always @ (*) begin
+      fsm_ns = fsm_cs;
+      done = 1'b0;          
+      t_start = 1'b0;
+
+      case(fsm_cs)
+         FSM_PRE:begin
+            if(start) begin
+               fsm_ns = FSM_CAL;
+               $display("start");
+            end
+         end
+         
+         FSM_CAL:begin
+            t_start = 1'b1;
+            fsm_ns = FSM_WAIT;
+            $display("wait");
+	 end         
+
+         FSM_WAIT:begin
+	     if(t_done[0]) begin
+                fsm_ns = FSM_DONE;
+		$display("done");
+	     end
+         end
+
+         FSM_DONE:begin                
+		done = 1'd1;
+                fsm_ns = FSM_DONE;         
+         end         
+   endcase
+end
+
+
+     
+endmodule   
