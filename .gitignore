@@ -5,6 +5,7 @@
 *.obj
 
 #~file
+*.sv~
 *.v~
 *.cpp~
 
