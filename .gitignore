@@ -4,6 +4,10 @@
 *.o
 *.obj
 
+#~file
+*.v~
+*.cpp~
+
 # Precompiled Headers
 *.gch
 *.pch
