@@ -431,7 +431,6 @@ btInt Sudoku::run()
       MSG("Allocated " << WSLen << "-byte Workspace at virtual address "<< std::hex << (void *)pWSUsrVirt);
 
       // Number of bytes in each of the source and destination buffers (4 MiB in this case)
-      btUnsigned32bitInt b_num_bytes= (btUnsigned32bitInt) ((WSLen - sizeof(VAFU2_CNTXT)) / 1000000);
       btUnsigned32bitInt a_num_bytes= (btUnsigned32bitInt) ((WSLen - sizeof(VAFU2_CNTXT)) / 2);
       btUnsigned32bitInt a_num_cl   = a_num_bytes / CL(1);  // number of cache lines in buffer
 
@@ -442,7 +441,7 @@ btInt Sudoku::run()
       btVirtAddr         pSource = pWSUsrVirt + sizeof(VAFU2_CNTXT);
 
       // The destination buffer is right after the source buffer
-      btVirtAddr         pDest   = pSource + b_num_bytes;
+      btVirtAddr         pDest   = pSource + a_num_bytes;
 
       struct OneCL {                      // Make a cache-line sized structure
          btUnsigned32bitInt dw[16];       //    for array arithmetic
