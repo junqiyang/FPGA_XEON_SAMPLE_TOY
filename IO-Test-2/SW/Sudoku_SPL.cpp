@@ -61,8 +61,8 @@
 // UN-COMMENT appropriate #define in order to enable either Hardware or ASE.
 //    DEFAULT is to use Software Simulation.
 //****************************************************************************
-//#define  HWAFU
-#define  ASEAFU
+#define  HWAFU
+//#define  ASEAFU
 
 using namespace AAL;
 
@@ -387,7 +387,7 @@ btInt Sudoku::run()
 
 #if defined( HWAFU )                /* Use FPGA hardware */
    ConfigRecord.Add(AAL_FACTORY_CREATE_CONFIGRECORD_FULL_SERVICE_NAME, "libHWSPLAFU");
-   ConfigRecord.Add(keyRegAFU_ID,"e394bd60-f216-411c-9880-e44a97e0e768");
+   ConfigRecord.Add(keyRegAFU_ID,"E394BD60-F216-411C-9880-E44A97E0E768");
    ConfigRecord.Add(AAL_FACTORY_CREATE_CONFIGRECORD_FULL_AIA_NAME, "libAASUAIA");
 
    #elif defined ( ASEAFU )
@@ -471,7 +471,7 @@ btInt Sudoku::run()
       for(int i=0;i<32;i++){
           puzzles[i]=2*i;
       }      
-      printf("size of uint32_t, %d",(int)sizeof(uint32_t));
+      printf("size of uint32_t, %d \n",(int)sizeof(uint32_t));
 
       volatile uint32_t *boardIn = (uint32_t*)pSource;
       /* Forget about everything but the first one */

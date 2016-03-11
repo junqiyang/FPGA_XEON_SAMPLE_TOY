@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Specify command to invoke your application below
-TEST_CMD="./Sudoku_SPL"
+TEST_CMD="./splapp3 --target=fpga"
 
 # Make sure processors are set to performance instead of ondemand
 

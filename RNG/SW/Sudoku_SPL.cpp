@@ -387,7 +387,7 @@ btInt Sudoku::run()
 
 #if defined( HWAFU )                /* Use FPGA hardware */
    ConfigRecord.Add(AAL_FACTORY_CREATE_CONFIGRECORD_FULL_SERVICE_NAME, "libHWSPLAFU");
-   ConfigRecord.Add(keyRegAFU_ID,"e394bd60-f216-411c-9880-e44a97e0e768");
+   ConfigRecord.Add(keyRegAFU_ID,"E394BD60-F216-411C-9880-E44A97E0E768");
    ConfigRecord.Add(AAL_FACTORY_CREATE_CONFIGRECORD_FULL_AIA_NAME, "libAASUAIA");
 
    #elif defined ( ASEAFU )
