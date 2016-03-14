@@ -61,8 +61,8 @@
 // UN-COMMENT appropriate #define in order to enable either Hardware or ASE.
 //    DEFAULT is to use Software Simulation.
 //****************************************************************************
-#define  HWAFU
-//#define  ASEAFU
+//#define  HWAFU
+#define  ASEAFU
 
 using namespace AAL;
 
@@ -387,7 +387,7 @@ btInt Sudoku::run()
 
 #if defined( HWAFU )                /* Use FPGA hardware */
    ConfigRecord.Add(AAL_FACTORY_CREATE_CONFIGRECORD_FULL_SERVICE_NAME, "libHWSPLAFU");
-   ConfigRecord.Add(keyRegAFU_ID,"E394BD60-F216-411C-9880-E44A97E0E768");
+   ConfigRecord.Add(keyRegAFU_ID,"e394bd60-f216-411c-9880-e44a97e0e768");
    ConfigRecord.Add(AAL_FACTORY_CREATE_CONFIGRECORD_FULL_AIA_NAME, "libAASUAIA");
 
    #elif defined ( ASEAFU )
@@ -428,7 +428,8 @@ btInt Sudoku::run()
       btVirtAddr         pWSUsrVirt = m_pWkspcVirt; // Address of Workspace
       const btWSSize     WSLen      = m_WkspcSize; // Length of workspace
 
-      MSG("Allocated " << WSLen << "-byte Workspace at virtual address "<< std::hex << (void *)pWSUsrVirt);
+      INFO("Allocated " << WSLen << "-byte Workspace at virtual address "
+                        << std::hex << (void *)pWSUsrVirt);
 
       // Number of bytes in each of the source and destination buffers (4 MiB in this case)
       btUnsigned32bitInt a_num_bytes= (btUnsigned32bitInt) ((WSLen - sizeof(VAFU2_CNTXT)) / 2);
@@ -466,16 +467,15 @@ btInt Sudoku::run()
 
 
 
-      uint32_t *puzzles = (uint32_t*)malloc(sizeof(uint32_t*)*16);
-      for(int i=0;i<16;i++){
-          puzzles[i]=random() % 200;
-          printf("random seed, %d",puzzles[i]);
-      }      
-      printf("size of uint32_t, %d",(int)sizeof(uint32_t));
-      
+      uint32_t *puzzles =(uint32_t*)malloc(6);
+      uint8_t *puzzles2 = (uint8_t*)((char*)puzzles + 4);
+      puzzles[0] = 1;
+      puzzles2[0] = 2;
+      puzzles2[1] = 6;
+
       volatile uint32_t *boardIn = (uint32_t*)pSource;
       /* Forget about everything but the first one */
-      memcpy((void*)boardIn, puzzles, sizeof(uint32_t)*16);
+      memcpy((void*)boardIn, puzzles, 6);
 
       free(puzzles);
 
@@ -488,7 +488,7 @@ btInt Sudoku::run()
       // Acquire the AFU. Once acquired in a TransactionContext, can issue CSR Writes and access DSM.
       // Provide a workspace and so also start the task.
       // The VAFU2 Context is assumed to be at the start of the workspace.
-      MSG("Starting SPL Transaction with Workspace");
+      INFO("Starting SPL Transaction with Workspace");
       m_SPLService->StartTransactionContext(TransactionID(), pWSUsrVirt, 100);
       m_Sem.Wait();
 
@@ -516,22 +516,13 @@ btInt Sudoku::run()
      // Stop the AFU
       volatile uint32_t *boardOut = (uint32_t*)pDest;
       int bye = 0;
-      int bye2 = 0;
-      for(int i =0;i<160;i++){
+      for(int i =0;i<16;i++){
 	 bye++;
-         bye2++;
-         if(bye2 == 16){
-		printf("\n");
-		bye2=0;
-                bye =0;
-                continue;
-         }
          printf("%d   ",boardOut[i]);
-         if(bye == 5){
+         if(bye == 4){
 		printf("\n");
 		bye=0;
 		}
-         
 	}
 
      
@@ -576,7 +567,7 @@ void Sudoku::serviceAllocated(IBase               *pServiceBase,
    // Allocate Workspaces needed. ASE runs more slowly and we want to watch the transfers,
    //   so have fewer of them.
 #if defined ( ASEAFU )
-#define LB_BUFFER_SIZE CL(512)
+#define LB_BUFFER_SIZE CL(16)
 #else
 #define LB_BUFFER_SIZE MB(4)
 #endif
