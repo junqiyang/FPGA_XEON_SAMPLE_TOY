@@ -452,15 +452,13 @@ btInt Sudoku::run()
       // Note: the usage of the VAFU2_CNTXT structure here is specific to the underlying bitstream
       // implementation. The bitstream targeted for use with this sample application must implement
       // the Validation AFU 2 interface and abide by the contract that a VAFU2_CNTXT structure will
-      // appear at byte offset 0 within the supplied AFU Context workspace.
-
-      // Initialize the command buffer
+      // appear at byte offset 0 within the supplied AFU Context workspace.      // Initialize the command buffer
       ::memset(pVAFU2_cntxt, 0, sizeof(VAFU2_CNTXT));
       pVAFU2_cntxt->num_cl  = a_num_cl;
       pVAFU2_cntxt->pSource = pSource;
       pVAFU2_cntxt->pDest   = pDest;
 
-      INFO("VAFU2 Context=" << std::hex << (void *)pVAFU2_cntxt <<
+      MSG("VAFU2 Context=" << std::hex << (void *)pVAFU2_cntxt <<
            " Src="          << std::hex << (void *)pVAFU2_cntxt->pSource <<
            " Dest="         << std::hex << (void *)pVAFU2_cntxt->pDest << std::dec);
 
@@ -488,7 +486,7 @@ btInt Sudoku::run()
       // Acquire the AFU. Once acquired in a TransactionContext, can issue CSR Writes and access DSM.
       // Provide a workspace and so also start the task.
       // The VAFU2 Context is assumed to be at the start of the workspace.
-      INFO("Starting SPL Transaction with Workspace");
+      MSG("Starting SPL Transaction with Workspace");
       m_SPLService->StartTransactionContext(TransactionID(), pWSUsrVirt, 100);
       m_Sem.Wait();
 
