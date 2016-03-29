@@ -61,8 +61,8 @@
 // UN-COMMENT appropriate #define in order to enable either Hardware or ASE.
 //    DEFAULT is to use Software Simulation.
 //****************************************************************************
-//#define  HWAFU
-#define  ASEAFU
+#define  HWAFU
+//#define  ASEAFU
 
 using namespace AAL;
 
@@ -95,45 +95,6 @@ using namespace AAL;
 
 #define LPBK1_DSM_SIZE           MB(4)
 
-/// @addtogroup SudokuSample
-/// @{
-
-inline uint32_t ln2(uint32_t x)
-{
-   uint32_t y = 1;
-   while ( x > 1 ) {
-      y++;
-      x = x >> 1;
-   }
-   return y;
-}
-
-inline uint32_t isPow2(uint32_t x)
-{
-   uint32_t pow2 = (x & (x - 1));
-   return (pow2 == 0);
-}
-
-inline void find_min(uint32_t *board, int32_t *min_idx, int *min_pos)
-{
-   int32_t tmp, idx, i, j;
-   int32_t tmin_idx, tmin_pos;
-
-   tmin_idx = 0;
-   tmin_pos = INT_MAX;
-   for (idx = 0; idx < 81; idx++)
-      {
-      tmp = __builtin_popcount(board[idx]);
-      tmp = (tmp == 1) ? INT_MAX : tmp;
-      if ( tmp < tmin_pos )
-         {
-         tmin_pos = tmp;
-         tmin_idx = idx;
-      }
-   }
-   *min_idx = tmin_idx;
-   *min_pos = tmin_pos;
-}
 
 
 /// @brief   Define our Runtime client class so that we can receive the runtime started/stopped notifications.
@@ -373,14 +334,7 @@ Sudoku::~Sudoku()
 
 btInt Sudoku::run()
 {
-   cout <<"======================="<<endl;
-   cout <<"= Hello SPL LB Sample ="<<endl;
-   cout <<"======================="<<endl;
-
-   // Request our AFU.
-
-   // NOTE: This example is bypassing the Resource Manager's configuration record lookup
-   //  mechanism.  This code is work around code and subject to change.
+  
    NamedValueSet Manifest;
    NamedValueSet ConfigRecord;
 
@@ -404,7 +358,6 @@ btInt Sudoku::run()
 
    Manifest.Add(AAL_FACTORY_CREATE_SERVICENAME, "Hello SPL LB");
 
-   MSG("Allocating Service");
 
    // Allocate the Service and allocate the required workspace.
    //   This happens in the background via callbacks (simple state machine).
@@ -468,10 +421,13 @@ btInt Sudoku::run()
 
 
       uint32_t *puzzles =(uint32_t*)malloc(12);
+      printf(" 1. A+B \n 2. B-A \n 3. A*B \n 4. A*B + A*B \n 5. A*(A+B)*B \n");
       cin>>puzzles[0];
+      printf("A = ");
       cin>>puzzles[1];
+      printf("B = ");
       cin>>puzzles[2];
-
+      
       volatile uint32_t *boardIn = (uint32_t*)pSource;
       /* Forget about everything but the first one */
       memcpy((void*)boardIn, puzzles, 12);
@@ -514,7 +470,7 @@ btInt Sudoku::run()
       ////////////////////////////////////////////////////////////////////////////
      // Stop the AFU
       volatile uint32_t *boardOut = (uint32_t*)pDest;
-      printf("%d   ",boardOut[0]);
+      printf("result = %d \n",boardOut[0]);
 
 
      
