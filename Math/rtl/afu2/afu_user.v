@@ -141,31 +141,31 @@ module afu_user #(ADDR_LMT = 20, MDATA = 14, CACHE_WIDTH = 512)
          
          FSM_TEST_1:
           begin
-              out_result = rd_rsp_data[31:0] + rd_rsp_data[63:32];
+              out_result = rd_rsp_data[95:64] + rd_rsp_data[63:32];
               fsm_ns = FSM_WR_REQ;
           end
          
          FSM_TEST_2:
           begin
-              out_result = rd_rsp_data[31:0] - rd_rsp_data[63:32];
+              out_result = rd_rsp_data[95:64] - rd_rsp_data[63:32];
               fsm_ns = FSM_WR_REQ;
           end
 
          FSM_TEST_3:
           begin
-              out_result = rd_rsp_data[31:0] * rd_rsp_data[63:32];
+              out_result = rd_rsp_data[95:64] * rd_rsp_data[63:32];
               fsm_ns = FSM_WR_REQ;
           end
 
          FSM_TEST_4:
           begin
-              out_result = rd_rsp_data[31:0] / rd_rsp_data[63:32];
+              out_result = rd_rsp_data[95:64] / rd_rsp_data[63:32];
               fsm_ns = FSM_WR_REQ;
           end
 
          FSM_TEST_5:
           begin
-              out_result = rd_rsp_data[31:0] % rd_rsp_data[63:32];
+              out_result = rd_rsp_data[95:64] % rd_rsp_data[63:32];
               fsm_ns = FSM_WR_REQ;
           end
 
