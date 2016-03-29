@@ -421,10 +421,13 @@ btInt Sudoku::run()
 
 
       uint32_t *puzzles =(uint32_t*)malloc(12);
+      printf(" 1. A+B \n 2. B-A \n 3. A*B \n 4. A*B + A*B \n 5. A*(A+B)*B \n");
       cin>>puzzles[0];
+      printf("A = ");
       cin>>puzzles[1];
+      printf("B = ");
       cin>>puzzles[2];
-
+      
       volatile uint32_t *boardIn = (uint32_t*)pSource;
       /* Forget about everything but the first one */
       memcpy((void*)boardIn, puzzles, 12);
@@ -467,8 +470,8 @@ btInt Sudoku::run()
       ////////////////////////////////////////////////////////////////////////////
      // Stop the AFU
       volatile uint32_t *boardOut = (uint32_t*)pDest;
-      printf("%d   ",boardOut[0]);
-      printf("%d   ",boardOut[1]);
+      printf("result = %d \n",boardOut[0]);
+
 
      
       // Issue Stop Transaction and wait for OnTransactionStopped
