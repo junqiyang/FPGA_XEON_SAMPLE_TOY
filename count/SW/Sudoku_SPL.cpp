@@ -56,7 +56,7 @@
 
 #include <string.h>
 #include <cassert>
-
+#include <time.h>
 //****************************************************************************
 // UN-COMMENT appropriate #define in order to enable either Hardware or ASE.
 //    DEFAULT is to use Software Simulation.
@@ -478,10 +478,25 @@ btInt Sudoku::run()
          puzzles[i] = rand() % 4;
       }
       volatile uint32_t *boardIn = (uint32_t*)pSource;
+
+      clock_t begin, end;
+      double time_spend;
+      begin = clock();
+      int counter = 0;
+      for(int i=16;i<16000016;i++){
+          if(puzzles[i] == 3){
+             counter++;
+          }
+      }
+      printf("counter: %d",counter);
+      end = clock();
+      time_spend = (double)(end - begin) / CLOCKS_PER_SEC;
+
+
       /* Forget about everything but the first one */
       memcpy((void*)boardIn, puzzles, 513000000);
 
-      free(puzzles);
+      //free(puzzles);
       printf("start\n");
       // Buffers have been initialized
       ////////////////////////////////////////////////////////////////////////////
@@ -492,7 +507,10 @@ btInt Sudoku::run()
       // Acquire the AFU. Once acquired in a TransactionContext, can issue CSR Writes and access DSM.
       // Provide a workspace and so also start the task.
       // The VAFU2 Context is assumed to be at the start of the workspace.
-      INFO("Starting SPL Transaction with Workspace");
+      //INFO("Starting SPL Transaction with Workspace");
+      clock_t begin2, end2;
+      double time_spend2;
+      begin2 = clock();
       m_SPLService->StartTransactionContext(TransactionID(), pWSUsrVirt, 100);
       m_Sem.Wait();
 
@@ -520,6 +538,8 @@ btInt Sudoku::run()
      // Stop the AFU
       volatile uint32_t *boardOut = (uint32_t*)pDest;
      printf("%d  \n ",boardOut[0]);
+     
+
  /*  for(int i=0;i<176;i++){
           printf("%d \n ",boardOut[i]);
       }
@@ -527,10 +547,16 @@ btInt Sudoku::run()
 */
      
       // Issue Stop Transaction and wait for OnTransactionStopped
-      INFO("Stopping SPL Transaction");
+      //INFO("Stopping SPL Transaction");
       m_SPLService->StopTransactionContext(TransactionID());
       m_Sem.Wait();
-      INFO("SPL Transaction complete");
+      end2 = clock();
+      time_spend2 = (double)(end2 - begin2) / CLOCKS_PER_SEC;
+
+
+      printf("software time: %f ,  hardware time: %f \n", time_spend, time_spend2);
+
+     // INFO("SPL Transaction complete");
 
 
    }
