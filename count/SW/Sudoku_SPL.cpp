@@ -87,7 +87,7 @@ using namespace AAL;
 # define CL(x)                     ((x) * 64)
 #endif // CL
 #ifndef LOG2_CL
-# define LOG2_CL                   6
+# define LOG2_CL                   6 
 #endif // LOG2_CL
 #ifndef MB
 # define MB(x)                     ((x) * 1024 * 1024)
@@ -428,7 +428,7 @@ btInt Sudoku::run()
       btVirtAddr         pWSUsrVirt = m_pWkspcVirt; // Address of Workspace
       const btWSSize     WSLen      = m_WkspcSize; // Length of workspace
 
-      INFO("Allocated " << WSLen << "-byte Workspace at virtual address "
+      MSG("Allocated " << WSLen << "-byte Workspace at virtual address "
                         << std::hex << (void *)pWSUsrVirt);
 
       // Number of bytes in each of the source and destination buffers (4 MiB in this case)
@@ -461,27 +461,28 @@ btInt Sudoku::run()
       pVAFU2_cntxt->pSource = pSource;
       pVAFU2_cntxt->pDest   = pDest;
 
-      INFO("VAFU2 Context=" << std::hex << (void *)pVAFU2_cntxt <<
+      MSG("VAFU2 Context=" << std::hex << (void *)pVAFU2_cntxt <<
            " Src="          << std::hex << (void *)pVAFU2_cntxt->pSource <<
            " Dest="         << std::hex << (void *)pVAFU2_cntxt->pDest << std::dec);
 
 
 
-      uint32_t *puzzles =(uint32_t*)malloc(5120);
+      uint32_t *puzzles =(uint32_t*)malloc(513000000);
       puzzles[0] = 3;
-      puzzles[1] = 10;
+      puzzles[1] = 999999;
       for(int i=2;i<15;i++){
           puzzles[i] = 0;
-      }     
-      for(int i=16;i<176;i++){
+      }  
+
+      for(int i=16;i<16000016;i++){
          puzzles[i] = rand() % 4;
       }
       volatile uint32_t *boardIn = (uint32_t*)pSource;
       /* Forget about everything but the first one */
-      memcpy((void*)boardIn, puzzles, 5120);
+      memcpy((void*)boardIn, puzzles, 513000000);
 
       free(puzzles);
-
+      printf("start\n");
       // Buffers have been initialized
       ////////////////////////////////////////////////////////////////////////////
 
@@ -518,12 +519,12 @@ btInt Sudoku::run()
       ////////////////////////////////////////////////////////////////////////////
      // Stop the AFU
       volatile uint32_t *boardOut = (uint32_t*)pDest;
-      //printf("%d   ",boardOut[0]);
-      for(int i=0;i<16;i++){
-          printf("%d  ",boardOut[i]);
+     printf("%d  \n ",boardOut[0]);
+ /*  for(int i=0;i<176;i++){
+          printf("%d \n ",boardOut[i]);
       }
 
-
+*/
      
       // Issue Stop Transaction and wait for OnTransactionStopped
       INFO("Stopping SPL Transaction");
@@ -568,7 +569,7 @@ void Sudoku::serviceAllocated(IBase               *pServiceBase,
 #if defined ( ASEAFU )
 #define LB_BUFFER_SIZE CL(16)
 #else
-#define LB_BUFFER_SIZE MB(4)
+#define LB_BUFFER_SIZE MB(256)
 #endif
 
    m_SPLService->WorkspaceAllocate(sizeof(VAFU2_CNTXT) + LB_BUFFER_SIZE + LB_BUFFER_SIZE,
