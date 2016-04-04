@@ -445,6 +445,8 @@ btInt Sudoku::run()
       }
       int counter = 0;
       volatile uint32_t *boardIn = (uint32_t*)pSource;
+      memcpy((void*)boardIn, puzzles, 640);
+
       for(int i=0;i<112;i++){
             if(counter == 16){
                printf("\n");
@@ -454,8 +456,7 @@ btInt Sudoku::run()
             counter++;
       }
       
-/* Forget about everything but the first one */
-      memcpy((void*)boardIn, puzzles, 640);
+
 
       //free(puzzles);
       printf("start\n");
