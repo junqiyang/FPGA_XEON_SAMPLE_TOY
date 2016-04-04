@@ -443,6 +443,7 @@ btInt Sudoku::run()
       for(int i=16;i<96;i++){
          puzzles[i] = 3;
       }
+      int counter = 0;
       volatile uint32_t *boardIn = (uint32_t*)pSource;
       for(int i=0;i<112;i++){
             if(counter == 16){
@@ -511,7 +512,7 @@ btInt Sudoku::run()
       clock_t begin, end;
       double time_spend;
       begin = clock();
-      int counter = 0;
+      counter = 0;
       for(int i=16;i<96;i++){
           if(puzzles[i] == 3){
              counter++;
