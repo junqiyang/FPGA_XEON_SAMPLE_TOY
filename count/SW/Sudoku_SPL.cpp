@@ -98,45 +98,7 @@ using namespace AAL;
 /// @addtogroup SudokuSample
 /// @{
 
-inline uint32_t ln2(uint32_t x)
-{
-   uint32_t y = 1;
-   while ( x > 1 ) {
-      y++;
-      x = x >> 1;
-   }
-   return y;
-}
-
-inline uint32_t isPow2(uint32_t x)
-{
-   uint32_t pow2 = (x & (x - 1));
-   return (pow2 == 0);
-}
-
-inline void find_min(uint32_t *board, int32_t *min_idx, int *min_pos)
-{
-   int32_t tmp, idx, i, j;
-   int32_t tmin_idx, tmin_pos;
-
-   tmin_idx = 0;
-   tmin_pos = INT_MAX;
-   for (idx = 0; idx < 81; idx++)
-      {
-      tmp = __builtin_popcount(board[idx]);
-      tmp = (tmp == 1) ? INT_MAX : tmp;
-      if ( tmp < tmin_pos )
-         {
-         tmin_pos = tmp;
-         tmin_idx = idx;
-      }
-   }
-   *min_idx = tmin_idx;
-   *min_pos = tmin_pos;
-}
-
-
-/// @brief   Define our Runtime client class so that we can receive the runtime started/stopped notifications.
+//  Define our Runtime client class so that we can receive the runtime started/stopped notifications.
 ///
 /// We implement a Service client within, to handle AAL Service allocation/free.
 /// We also implement a Semaphore for synchronization with the AAL runtime.
@@ -467,15 +429,19 @@ btInt Sudoku::run()
 
 
 
-      uint32_t *puzzles =(uint32_t*)malloc(513000000);
+      uint32_t *puzzles =(uint32_t*)malloc(640);
       puzzles[0] = 3;
-      puzzles[1] = 999999;
-      for(int i=2;i<15;i++){
+      puzzles[1] = 7;
+      for(int i=2;i<16;i++){
           puzzles[i] = 0;
       }  
-
-      for(int i=16;i<16000016;i++){
-         puzzles[i] = rand() % 4;
+      
+/*      for(int i=16;i<32;i++){
+         puzzles[i] = 3;
+      }
+*/
+      for(int i=16;i<96;i++){
+         puzzles[i] = 3;
       }
       volatile uint32_t *boardIn = (uint32_t*)pSource;
 
@@ -483,7 +449,7 @@ btInt Sudoku::run()
       double time_spend;
       begin = clock();
       int counter = 0;
-      for(int i=16;i<16000016;i++){
+      for(int i=16;i<96;i++){
           if(puzzles[i] == 3){
              counter++;
           }
@@ -494,7 +460,7 @@ btInt Sudoku::run()
 
 
       /* Forget about everything but the first one */
-      memcpy((void*)boardIn, puzzles, 513000000);
+      memcpy((void*)boardIn, puzzles, 640);
 
       //free(puzzles);
       printf("start\n");
@@ -595,7 +561,7 @@ void Sudoku::serviceAllocated(IBase               *pServiceBase,
 #if defined ( ASEAFU )
 #define LB_BUFFER_SIZE CL(16)
 #else
-#define LB_BUFFER_SIZE MB(256)
+#define LB_BUFFER_SIZE MB(64)
 #endif
 
    m_SPLService->WorkspaceAllocate(sizeof(VAFU2_CNTXT) + LB_BUFFER_SIZE + LB_BUFFER_SIZE,
