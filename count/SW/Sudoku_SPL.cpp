@@ -444,36 +444,20 @@ btInt Sudoku::run()
          puzzles[i] = 3;
       }
       volatile uint32_t *boardIn = (uint32_t*)pSource;
-
-      clock_t begin, end;
-      double time_spend;
-      begin = clock();
-      int counter = 0;
-      for(int i=16;i<96;i++){
-          if(puzzles[i] == 3){
-             counter++;
-          }
+      for(int i=0;i<112;i++){
+            if(counter == 16){
+               printf("\n");
+               counter = 0;
+            }
+            printf("%d ",boardIn[i]);
+            counter++;
       }
-      printf("counter: %d",counter);
-      end = clock();
-      time_spend = (double)(end - begin) / CLOCKS_PER_SEC;
-
-
-      /* Forget about everything but the first one */
+      
+/* Forget about everything but the first one */
       memcpy((void*)boardIn, puzzles, 640);
 
       //free(puzzles);
       printf("start\n");
-      // Buffers have been initialized
-      ////////////////////////////////////////////////////////////////////////////
-
-      ////////////////////////////////////////////////////////////////////////////
-      // Get the AFU and start talking to it
-
-      // Acquire the AFU. Once acquired in a TransactionContext, can issue CSR Writes and access DSM.
-      // Provide a workspace and so also start the task.
-      // The VAFU2 Context is assumed to be at the start of the workspace.
-      //INFO("Starting SPL Transaction with Workspace");
       clock_t begin2, end2;
       double time_spend2;
       begin2 = clock();
@@ -511,6 +495,34 @@ btInt Sudoku::run()
       }
 
 */
+
+
+
+
+
+
+
+
+
+
+
+
+
+      clock_t begin, end;
+      double time_spend;
+      begin = clock();
+      int counter = 0;
+      for(int i=16;i<96;i++){
+          if(puzzles[i] == 3){
+             counter++;
+          }
+      }
+      printf("counter: %d",counter);
+      end = clock();
+      time_spend = (double)(end - begin) / CLOCKS_PER_SEC;
+
+
+      
      
       // Issue Stop Transaction and wait for OnTransactionStopped
       //INFO("Stopping SPL Transaction");
