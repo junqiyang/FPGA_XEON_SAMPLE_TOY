@@ -40,7 +40,7 @@
 //
 // Simplify by removing scratch csr and block transfer
 //------------------------------------------------------------------------
-`include "/home/junqi/Documents/FPGA-TEST/sizeup/spl2/spl_defines.vh"
+`include "spl_defines.vh"
 
 module afu_top (
     input  wire                             clk,

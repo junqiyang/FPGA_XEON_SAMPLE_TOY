@@ -62,7 +62,7 @@
 
 
 
-`include "/home/junqi/Documents/FPGA-TEST/sizeup/spl2/spl_defines.vh"
+`include "spl_defines.vh"
 
 module afu_core #(MDATA = 14) 
   (

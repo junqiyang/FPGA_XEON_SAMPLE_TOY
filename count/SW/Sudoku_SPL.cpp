@@ -427,44 +427,33 @@ btInt Sudoku::run()
            " Src="          << std::hex << (void *)pVAFU2_cntxt->pSource <<
            " Dest="         << std::hex << (void *)pVAFU2_cntxt->pDest << std::dec);
 
+      printf("how many random number? \n");
+      int number;
+      cin >> number;
 
-
-      uint32_t *puzzles =(uint32_t*)malloc(5120);
+      uint32_t *puzzles =(uint32_t*)malloc(number*4+64);
       puzzles[0] = 3;
-      puzzles[1] = 6;  
+      puzzles[1] = number/16 +1;  
       for(int i =2;i<16;i++){
          puzzles[i] = 0;
       }
-      for(int i=16;i<32;i++){
-         puzzles[i] = 0;
+      for(int i=16;i<number;i++){
+         puzzles[i] = rand()%4;
       }
-      puzzles[17] = 3;
-      for(int i=32;i<48;i++){
-         puzzles[i] = 3;
-      }
-      
-      for(int i =48;i<55;i++){
-         puzzles[i] = 3;
-      }      
- 
-      for(int i =55;i<64;i++ ){
-         puzzles[i] = 0;
-      }
-      for(int i = 64;i<96;i++){
-         puzzles[i]= rand()%4;
-       }
+
 
       int counter = 0;
       volatile uint32_t *boardIn = (uint32_t*)pSource;
       memcpy((void*)boardIn, puzzles, 640);
-
-      for(int i=0;i<96;i++){
-            if(counter == 16){
-               printf("\n");
-               counter = 0;
-            }
-            printf("%d ",boardIn[i]);
-            counter++;
+      if(number <= 160){
+           for(int i=0;i<number;i++){
+                if(counter == 16){
+                   printf("\n");
+                   counter = 0;
+                }
+                printf("%d ",boardIn[i]);
+                counter++;
+           }
       }
       //free(puzzles);
      
@@ -499,37 +488,14 @@ btInt Sudoku::run()
       volatile uint32_t *boardOut = (uint32_t*)pDest;
     printf("\n hardware result: %d \n",boardOut[0]);
      
-      printf("\n");
-/*      for(int i=16;i<96;i++){
-            if(counter == 16){
-               printf("\n");
-               counter = 0;
-            }
-            printf("%d ",boardOut[i]);
-            counter++;
-      }
-*/
-
-     
-
-
-
-
-
-
-
-
-
-
-
-
+    printf("\n");
 
       clock_t begin, end;
       double time_spend;
       begin = clock();
       counter = 0;
      
-      for(int i=16;i<96;i++){
+      for(int i=16;i<number;i++){
           if(puzzles[i] == 3){
              counter++;
           }
@@ -590,7 +556,7 @@ void Sudoku::serviceAllocated(IBase               *pServiceBase,
 #if defined ( ASEAFU )
 #define LB_BUFFER_SIZE CL(16)
 #else
-#define LB_BUFFER_SIZE MB(64)
+#define LB_BUFFER_SIZE MB(200)
 #endif
 
    m_SPLService->WorkspaceAllocate(sizeof(VAFU2_CNTXT) + LB_BUFFER_SIZE + LB_BUFFER_SIZE,

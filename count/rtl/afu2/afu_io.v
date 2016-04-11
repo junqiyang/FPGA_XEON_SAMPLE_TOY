@@ -43,7 +43,7 @@
 
 
 `define MAX_TRANSFER_SIZE_1
-`include "/home/junqi/Documents/FPGA-TEST/sizeup/spl2/spl_defines.vh"
+`include "spl_defines.vh"
 
 
 module afu_io #(MDATA = 14) 
