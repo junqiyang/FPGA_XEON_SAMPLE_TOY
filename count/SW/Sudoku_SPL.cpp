@@ -429,25 +429,36 @@ btInt Sudoku::run()
 
 
 
-      uint32_t *puzzles =(uint32_t*)malloc(640);
+      uint32_t *puzzles =(uint32_t*)malloc(5120);
       puzzles[0] = 3;
-      puzzles[1] = 7;
-      for(int i=2;i<16;i++){
-          puzzles[i] = 0;
-      }  
+      puzzles[1] = 6;  
+      for(int i =2;i<16;i++){
+         puzzles[i] = 0;
+      }
+      for(int i=16;i<32;i++){
+         puzzles[i] = 0;
+      }
+      puzzles[17] = 3;
+      for(int i=32;i<48;i++){
+         puzzles[i] = 3;
+      }
       
-/*      for(int i=16;i<32;i++){
+      for(int i =48;i<55;i++){
          puzzles[i] = 3;
+      }      
+ 
+      for(int i =55;i<64;i++ ){
+         puzzles[i] = 0;
       }
-*/
-      for(int i=16;i<96;i++){
-         puzzles[i] = 3;
-      }
+      for(int i = 64;i<96;i++){
+         puzzles[i]= rand()%4;
+       }
+
       int counter = 0;
       volatile uint32_t *boardIn = (uint32_t*)pSource;
       memcpy((void*)boardIn, puzzles, 640);
 
-      for(int i=0;i<112;i++){
+      for(int i=0;i<96;i++){
             if(counter == 16){
                printf("\n");
                counter = 0;
@@ -455,11 +466,8 @@ btInt Sudoku::run()
             printf("%d ",boardIn[i]);
             counter++;
       }
-      
-
-
       //free(puzzles);
-      printf("start\n");
+     
       clock_t begin2, end2;
       double time_spend2;
       begin2 = clock();
@@ -489,14 +497,20 @@ btInt Sudoku::run()
       ////////////////////////////////////////////////////////////////////////////
      // Stop the AFU
       volatile uint32_t *boardOut = (uint32_t*)pDest;
-     printf("%d  \n ",boardOut[0]);
+    printf("\n hardware result: %d \n",boardOut[0]);
      
-
- /*  for(int i=0;i<176;i++){
-          printf("%d \n ",boardOut[i]);
+      printf("\n");
+/*      for(int i=16;i<96;i++){
+            if(counter == 16){
+               printf("\n");
+               counter = 0;
+            }
+            printf("%d ",boardOut[i]);
+            counter++;
       }
-
 */
+
+     
 
 
 
@@ -514,12 +528,13 @@ btInt Sudoku::run()
       double time_spend;
       begin = clock();
       counter = 0;
+     
       for(int i=16;i<96;i++){
           if(puzzles[i] == 3){
              counter++;
           }
       }
-      printf("counter: %d",counter);
+      printf("\n software counter: %d",counter);
       end = clock();
       time_spend = (double)(end - begin) / CLOCKS_PER_SEC;
 
@@ -534,7 +549,7 @@ btInt Sudoku::run()
       time_spend2 = (double)(end2 - begin2) / CLOCKS_PER_SEC;
 
 
-      printf("software time: %f ,  hardware time: %f \n", time_spend, time_spend2);
+      printf("\n software time: %f ,  hardware time: %f \n", time_spend, time_spend2);
 
      // INFO("SPL Transaction complete");
 

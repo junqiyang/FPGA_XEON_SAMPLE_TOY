@@ -421,7 +421,7 @@ btInt Sudoku::run()
 
 
       uint32_t *puzzles =(uint32_t*)malloc(12);
-      printf(" 1. A+B \n 2. B-A \n 3. A*B \n 4. A*B + A*B \n 5. A*(A+B)*B \n");
+      printf(" 1. A+B(16) \n 2. B-A(16) \n 3. A*B(1) \n 4. A*B + A*B \n 5. A == B(16) \n 6. A != B \n 7. if A > B? \n 8. A < B \n 9. A >= B \n 10. A <= B \n 11. A+A+A+A+A+A+A+A+A...+A(17)\n" );
       cin>>puzzles[0];
       printf("A = ");
       cin>>puzzles[1];
@@ -470,7 +470,10 @@ btInt Sudoku::run()
       ////////////////////////////////////////////////////////////////////////////
      // Stop the AFU
       volatile uint32_t *boardOut = (uint32_t*)pDest;
-      printf("result = %d \n",boardOut[0]);
+      printf("result: \n");
+      for(int i=0;i<16;i++){
+         printf("%d  \n ",boardOut[i]);
+      }      
 
 
      
