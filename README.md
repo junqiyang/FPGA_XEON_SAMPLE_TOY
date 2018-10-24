@@ -1,5 +1,7 @@
 # FPGA_Samples
 
+This is my first research project, play around with the new FPGA-Xeon machine that is given as a gift from Intel for the Lab. This Repo contains some very simple program that could run and test the target machine.
+
 matrix 4x4: still under development, the output isn't correct. Should look into the multiplier.
 
 IO-Test: simple one read and one write, all development can base on this
